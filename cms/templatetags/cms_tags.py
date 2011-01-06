@@ -235,6 +235,7 @@ class PageAttribute(Tag):
     Synopsis
          {% page_attribute "field-name" %}
          {% page_attribute "field-name" page_lookup %}
+         {% page_attribute "field-name" as var_name %}
 
     Example
          {# Output current page's page_title attribute: #}
@@ -256,11 +257,15 @@ class PageAttribute(Tag):
     page_lookup -- lookup argument for Page, if omitted field-name of current page is returned.
     See _get_page_by_untyped_arg() for detailed information on the allowed types and their interpretation
     for the page_lookup argument.
+    
+    as var_name -- adds result to context variable instead of printing it out.
     """
     name = 'page_attribute'
     options = Options(
         Argument('name', resolve=False),
-        Argument('page_lookup', required=False, default=None)
+        Argument('page_lookup', required=False, default=None),
+        'as',
+        Argument('var_name', required=False, resolve=False, default=None)
     )
     
     valid_attributes = [
@@ -272,7 +277,7 @@ class PageAttribute(Tag):
         "menu_title"
     ]
     
-    def render_tag(self, context, name, page_lookup):
+    def render_tag(self, context, name, page_lookup, var_name):
         if not 'request' in context:
             return ''
         name = name.lower()
@@ -280,11 +285,14 @@ class PageAttribute(Tag):
         lang = get_language_from_request(request)
         page = _get_page_by_untyped_arg(page_lookup, request, get_site_id(None))
         if page == "dummy":
-            return ''
+            res = ''
         if page and name in self.valid_attributes:
             f = getattr(page, "get_%s" % name)
-            return f(language=lang, fallback=True)
-        return ''
+            res = f(language=lang, fallback=True)
+        if var_name:
+            context[var_name] = res
+            return ''
+        return res
 register.tag(PageAttribute)
 
 class CleanAdminListFilter(InclusionTag):
