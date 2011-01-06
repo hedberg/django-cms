@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: django-cms 2.1.0-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-04 21:58+0100\n"
-"PO-Revision-Date: 2011-01-04 23:04+0100\n"
+"PO-Revision-Date: 2011-01-06 21:31+0100\n"
 "Last-Translator: Simon Hedberg <simon@in-formation.se>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -25,19 +25,19 @@ msgstr "Avancerade inställningar"
 
 #: admin/forms.py:51
 msgid "Title"
-msgstr "Rubrik"
+msgstr "Namn"
 
 #: admin/forms.py:52
 msgid "The default title"
-msgstr "Standardrubrik"
+msgstr "Sidans namn"
 
 #: admin/forms.py:53
 msgid "Slug"
-msgstr "Slug"
+msgstr "URL-namn"
 
 #: admin/forms.py:54
 msgid "The part of the title that is used in the URL"
-msgstr "Den del av rubriken som används i URL:en"
+msgstr "Den del av namnet som används i webbadressen"
 
 #: admin/forms.py:55
 msgid "Language"
@@ -45,11 +45,11 @@ msgstr "Språk"
 
 #: admin/forms.py:56
 msgid "The current language of the content fields."
-msgstr "Redigera i detta språk"
+msgstr "Det aktiva språket för innehållsfälten."
 
 #: admin/forms.py:109
 msgid "Another page with this slug already exists"
-msgstr "En annan sida med samma slug finns redan"
+msgstr "En annan sida med samma URL-namn finns redan"
 
 #: admin/forms.py:127
 msgid "Menu Title"
@@ -57,7 +57,7 @@ msgstr "Menyrubrik"
 
 #: admin/forms.py:128
 msgid "Overwrite what is displayed in the menu"
-msgstr "Ange för att visa annan text än sidrubrik i menyn"
+msgstr "Ange för att visa annan text än sidans namn i menyn"
 
 #: admin/forms.py:129
 msgid "Page Title"
@@ -1780,7 +1780,7 @@ msgstr "godkänn"
 #: utils/moderator.py:249
 #, python-format
 msgid "CMS - Page %s requires approvement."
-msgstr "CMS - Sida %s kräver godkännande."
+msgstr "CMS - Sida %s behöver godkännande."
 
 #: utils/permissions.py:205
 msgid "CMS - your user account was created."
