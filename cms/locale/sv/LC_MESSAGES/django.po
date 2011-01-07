@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: django-cms 2.1.0-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-04 21:58+0100\n"
-"PO-Revision-Date: 2011-01-06 21:31+0100\n"
+"PO-Revision-Date: 2011-01-07 10:47+0100\n"
 "Last-Translator: Simon Hedberg <simon@in-formation.se>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -61,7 +61,7 @@ msgstr "Ange för att visa annan text än sidans namn i menyn"
 
 #: admin/forms.py:129
 msgid "Page Title"
-msgstr "Sidrubrik"
+msgstr "Sidtitel"
 
 #: admin/forms.py:130
 msgid "Overwrites what is displayed at the top of your browser or in bookmarks"
