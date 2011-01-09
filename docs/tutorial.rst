@@ -27,11 +27,12 @@ of those projects.
 
 Install the latest django CMS package::
 
-    $ sudo pip install django-cms
+    $ sudo pip install django-cms south django-appmedia
 
 Or install the latest revision from github::
 
     $ sudo pip install -e git+git://github.com/divio/django-cms.git#egg=django-cms
+    $ sudo pip install south django-appmedia
 
 To check if you installed django CMS properly, open a Python shell and type::
 
@@ -85,6 +86,7 @@ Add the following apps to your ``INSTALLED_APPS``:
 * ``'mptt'``
 * ``'menus'``
 * ``'south'``
+* ``'appmedia'``
 
 Also add any (or all) of the following plugins, depending on your needs:
 
@@ -106,20 +108,19 @@ right position::
 
 
 	MIDDLEWARE_CLASSES = (
-	    'django.middleware.cache.UpdateCacheMiddleware',
-	    'django.contrib.sessions.middleware.SessionMiddleware',
-	    'django.contrib.auth.middleware.AuthenticationMiddleware',
 	    'django.middleware.common.CommonMiddleware',
-	    'django.middleware.doc.XViewMiddleware',
+	    'django.contrib.sessions.middleware.SessionMiddleware',
 	    'django.middleware.csrf.CsrfViewMiddleware',
+	    'django.contrib.auth.middleware.AuthenticationMiddleware',
+	    'django.contrib.messages.middleware.MessageMiddleware',
 	    'cms.middleware.page.CurrentPageMiddleware',
 	    'cms.middleware.user.CurrentUserMiddleware',
 	    'cms.middleware.toolbar.ToolbarMiddleware',
 	    'cms.middleware.media.PlaceholderMediaMiddleware',
-	    'django.middleware.cache.FetchFromCacheMiddleware',
 	)
 
-You need at least the following ``TEMPLATE_CONTEXT_PROCESSORS``::
+You need at least the following ``TEMPLATE_CONTEXT_PROCESSORS`` (a default Django
+settings file will not have any)::
 
 	TEMPLATE_CONTEXT_PROCESSORS = (
 	    'django.core.context_processors.auth',
@@ -129,19 +130,39 @@ You need at least the following ``TEMPLATE_CONTEXT_PROCESSORS``::
 	    'cms.context_processors.media',
 	)
 
+Almost there!
+Point your ``MEDIA_ROOT`` to where the static media should live (that is, your images, 
+CSS files, Javascript files...)::
+
+	MEDIA_ROOT = os.path.join(PROJECT_PATH, "media")
+	MEDIA_URL = "/media/"
+	ADMIN_MEDIA_PREFIX="/media/admin/"
+
+Now add a little magic to the ``TEMPLATE_DIRS`` section of the file::
+
+	TEMPLATE_DIRS = (
+	    # The docs say it should be absolute path: PROJECT_PATH is precisely one.
+	    # Life is wonderful!
+	    os.path.join(PROJECT_PATH, "templates")
+	)
 
 Add at least one template to ``CMS_TEMPLATES``; for example::
 
 	CMS_TEMPLATES = (
-	    ('default.html', gettext('default')),
+	    ('template_1.html', 'Template One'),
+	    ('template_2.html', 'Template Two'),
 	)
 
+We will create the actual template files at a later step, don't worry about it for 
+now, and simply paste this code in your settings file.
 
 .. note::
 
-    The templates you define in ``CMS_TEMPLATES`` have to actually exist and
+    The templates you define in ``CMS_TEMPLATES`` have to exist at runtime and
     contain at least one ``{% placeholder <name> %}`` template tag to be useful
-    for django CMS. For more details see `Templates`_
+    for django CMS. For more details see `Creating templates`_
+
+Finally, setup the ``DATABASES`` part of the file to reflect your database deployement.
 
 
 URL configuration
@@ -161,27 +182,22 @@ urlpatterns. We suggest starting with the following ``urls.py``::
         url(r'^', include('cms.urls')),
 	)
 
-	if settings.DEBUG: # these lines are just to serve media on local machines.
+	if settings.DEBUG:
 	    urlpatterns = patterns('',
-	        url(
-	            r'^media/cms/(?P<path>.*)$',
-	            'django.views.static.serve',
-	            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}
-	        )
+	        (r'^' + settings.MEDIA_URL.lstrip('/'), include('appmedia.urls')),
 	    ) + urlpatterns
 
-To have access to app specific media files (javascript, stylesheets, images), we
-recommend you use `django-appmedia`_. After you've installed it, use
-``python manage.py symlinkmedia`` and it will do all the work for you.
+To have access to app specific media files, use ``python manage.py symlinkmedia`` 
+and `django-appmedia`_ will do all the work for you.
 
 .. _django-appmedia: http://pypi.python.org/pypi/django-appmedia
-
 
 Initial database setup
 ======================
 
 This command depends on whether you **upgrade** your installation or do a
-**fresh install**.
+**fresh install**. We recommend that you get familiar with the way `South`_ works, 
+as it is a very powerful, easy and convenient tool. Django CMS uses it extensively.
 
 Fresh install
 -------------
@@ -206,9 +222,9 @@ Run::
 Up and running!
 ===============
 
-That should be it. Restart your development server and go to
-`127.0.0.1:8000 <http://127.0.0.1:8000>`_ and you should get the Django
-CMS "It Worked" screen.
+That should be it. Restart your development server using ``python manage.py runserver`` 
+and point a web browser to `127.0.0.1:8000 <http://127.0.0.1:8000>`_ :you should get 
+the Django CMS "It Worked" screen.
 
 |it-works-cms|
 
@@ -217,15 +233,15 @@ CMS "It Worked" screen.
 Head over to the `admin panel <http://127.0.0.1:8000/admin/>` and log in with
 the user you created during the database setup.
 
-To deploy your django CMS project on a real webserver, please refer to the
+To deploy your django CMS project on a production webserver, please refer to the
 `Django Documentation <http://docs.djangoproject.com/en/1.2/howto/deployment/>`_.
 
 
-*********
-Templates
-*********
+******************
+Creating templates
+******************
 
-django CMS uses templates to define how a page should look and what parts of
+Django CMS uses templates to define how a page should look and what parts of
 it are editable. Editable areas are called *placeholders*. These templates are
 standard Django templates and you may use them as described in the
 `official documentation`_.
@@ -236,8 +252,14 @@ setting::
   CMS_TEMPLATES = (
       ('template_1.html', 'Template One'),
       ('template_2.html', 'Template Two'),
-      ...
   )
+
+If you followed this tutorial from the beginning, we already put this code in your settings file.
+
+Now, on with the actual template files!
+
+Fire up your favorite editor and create a file called ``base.html`` in a folder called ``templates``
+in your myproject directory.
 
 Here is a simple example for a base template called ``base.html``:
 
@@ -251,7 +273,8 @@ Here is a simple example for a base template called ``base.html``:
     </body>
   </html>
 
-Now we can use this base template in our ``template_1.html`` template:
+Now, create a file called ``template_1.html`` in the same directory. This will use 
+your base template, and add extra content to it:
 
 .. code-block:: html+django
 
@@ -270,8 +293,101 @@ template ``template_1.html`` and another is ``base_content`` from the extended
 When working with a lot of placeholders, make sure to give descriptive
 names for your placeholders, to more easily identify them in the admin panel.
 
+Now, feel free to experiment and make a ``template_2.html`` file! If you don't feel creative, 
+just copy template_1 and name the second placeholder something like "template_2_content".
+
 .. _official documentation: http://docs.djangoproject.com/en/1.2/topics/templates/
 
+*****************************
+Creating your first CMS page!
+*****************************
+
+That's it, now the best part: you can start using the CMS!
+Run your server with ``python manage.py runserver``, then point a web browser to 
+`127.0.0.1:8000/admin/ <http://127.0.0.1:8000/admin/>`_ , and log in using the super 
+user credentials you defined when you ran ``syncdb`` earlier.
+
+Once in the admin part of your site, you should see something like the following:
+
+|first-admin| 
+
+.. |first-admin| image:: images/first-admin.png
+
+Adding a page
+=============
+
+Adding a page is as simple as clicking "Pages" in the admin view, then the "add page" button
+on the top right-hand corner of the screen.
+
+This is where you select which template to use (remember, we created two), as well as
+pretty obvious things like which language the page is in (used for internationalisation),
+the page's title, and the url slug it will use.
+
+Hitting the "Save" button, well, saves the page. It will now display in the list of
+pages.
+
+|my-first-page|
+
+.. |my-first-page| image:: images/my-first-page.png
+
+Congratulations! You now have a fully functional Django CMS installation!
+
+Publishing a page
+=================
+
+The list of pages available is a handy way to change a few parameters about your pages:
+
+Visibility
+----------
+By default, pages are "invisible". To let people access them you should mark them as "published".
+
+Menus 
+-----
+Another option this view lets you tweak is wether or not the page should appear in
+your site's navigation (that is, wether there should be a menu entry to reach it
+or not)
+
+Adding content to a page
+========================
+
+So far, our page doesn't do much. Make sure it's marked as "published", the click on the page's 
+"edit" button.
+
+Ignore most of the interface for now, and click the "view on site" button on the 
+top right-hand corner of the screen. As expected, your page is blank for the time being,
+since our template is really a minimal one.
+
+Let's get to it now then!
+
+Press your browser's back button, so as to see the page's admin interface. If you followed 
+the tutorial so far, your template (``template_1.html``) defines two placeholders.
+The admin interfaces shows you theses placeholders as sub menus:
+
+|first-placeholders|
+
+.. |first-placeholders| image:: images/first-placeholders.png
+
+Scroll down the "Available plugins" drop-down list. This displays the plugins you
+added to your INSTALLED_APPS settings. Choose the "text" plugin in the drop-down,
+then press the "Add" button.
+
+The right part of the plugin area displays a rich text editor (`TinyMCE`_).
+
+Type in whatever you please there, then press the "Save" button.
+
+Go back to your website using the top right-hand "View on site" button. That's it!
+
+|hello-cms-world|
+
+.. |hello-cms-world| image:: images/hello-cms-world.png
+
+.. _TinyMCE: http://tinymce.moxiecode.com/
+
+Where to go from here
+=====================
+
+Congratulations, you now have a fully functional CMS! Feel free to play around 
+with the different plugins provided out of the box, and build great websites!
 
 **************************
 Integrating custom content
