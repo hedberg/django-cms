@@ -45,10 +45,12 @@ setup(
     license='BSD License',
     platforms=['OS Independent'],
     classifiers=CLASSIFIERS,
-    requires=[
-        'django (>1.1.0)',
+    install_requires=[
+        'Django>=1.2',
+        'django-classy-tags>=0.2.2',
+        'PIL>=1.1.6',
     ],
-    packages=find_packages(exclude=["example", "example.*"]),
+    packages=find_packages(exclude=["example", "example.*","testdata","testdata.*"]),
     package_data={
         'cms': [
             'templates/admin/*.html',
