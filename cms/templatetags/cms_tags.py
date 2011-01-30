@@ -245,6 +245,8 @@ class PageAttribute(Tag):
          {% page_attribute "page_title" "the_page" %}
          {# Output slug attribute of the page with pk 10: #}
          {% page_attribute "slug" 10 %}
+         {# Set title variable in context to current page's page_title attribute: #}
+         {% page_attribute "page_title" as title %}
 
     Keyword arguments:
     field-name -- the name of the field to output. Use one of:
@@ -283,17 +285,18 @@ class PageAttribute(Tag):
             return ''
         name = name.lower()
         request = context['request']
+        value = ''
         lang = get_language_from_request(request)
         page = _get_page_by_untyped_arg(page_lookup, request, get_site_id(None))
         if page == "dummy":
-            res = ''
+            value = ''
         if page and name in self.valid_attributes:
             f = getattr(page, "get_%s" % name)
-            res = f(language=lang, fallback=True)
+            value = f(language=lang, fallback=True)
         if var_name:
-            context[var_name] = res
+            context[var_name] = value
             return ''
-        return res
+        return value
 register.tag(PageAttribute)
 
 class CleanAdminListFilter(InclusionTag):
