@@ -1,4 +1,5 @@
-from cms.tests.base import CMSTestCase
+# -*- coding: utf-8 -*-
+from cms.test.testcases import CMSTestCase
 from cms.utils.permissions import mail_page_user_change
 from django.core import mail
 

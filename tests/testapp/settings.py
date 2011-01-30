@@ -159,6 +159,11 @@ CMS_PLACEHOLDER_CONF = {
                     'TextPlugin', 'SnippetPlugin','GoogleMapPlugin',),
         'name': gettext("right column")
     },
+    'extra_context': {
+        "plugins": ('TextPlugin',),
+        "extra_context": {"width": 250},
+        "name": "extra context"
+    },
 }
 
 CMS_SOFTROOT = True
@@ -170,6 +175,10 @@ CMS_FLAT_URLS = False
 CMS_MENU_TITLE_OVERWRITE = True
 CMS_HIDE_UNTRANSLATED = False
 CMS_URL_OVERWRITE = True
+
+CMS_PLUGIN_PROCESSORS = tuple()
+
+CMS_PLUGIN_CONTEXT_PROCESSORS = tuple()
 
 SOUTH_TESTS_MIGRATE = False
 

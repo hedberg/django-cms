@@ -8,7 +8,7 @@ index=0
 reuse_env=true
 disable_coverage=true
 django_trunk=false
-
+python="python" # to ensure this script works if no python option is specified
 while [ "$index" -lt "$num_args" ]
 do
     case "${args[$index]}" in
@@ -27,6 +27,11 @@ do
         "--django-trunk")
             django_trunk=true
             ;;
+        
+        "--python")
+            let "index = $index + 1"
+            python="${args[$index]}"
+            ;;
 
         "--help")
             echo ""
@@ -40,6 +45,7 @@ do
             echo "    --with-coverage - enables coverage"
             echo "    --rebuild-env - run buildout before the tests"
             echo "    --django-trunk - run tests against django trunk"
+            echo "    --python /path/to/python - python version to use to run the tests"
             exit 1
             ;;
 
@@ -49,21 +55,11 @@ do
     let "index = $index + 1"
 done
 
-current_buildout_django=`cat .installed.cfg | grep "^version = " | sed s/'version = '//`
-
-if [ $reuse_env == true ]; then
-    if [[ $django_trunk && $current_buildout_django != 'trunk' ]]; then
-        reuse_env=false
-    else
-        if [[ !$django_trunk && $current_buildout_django != '1.2.4' ]]; then
-            reuse_env=false
-        fi
-    fi 
-fi
+echo "using python at: $python"
 
 if [ $reuse_env == false ]; then
     echo "setting up test environment (this might take a while)..."
-    python bootstrap.py
+    $python bootstrap.py
     if [ $? != 0 ]; then
         echo "bootstrap.py failed"
         exit 1

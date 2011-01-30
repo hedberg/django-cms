@@ -18,12 +18,12 @@ A list of templates you can select for a page.
 
 Example::
 
-	CMS_TEMPLATES = (
-		('base.html', gettext('default')),
-		('2col.html', gettext('2 Column')),
-		('3col.html', gettext('3 Column')),
-		('extra.html', gettext('Some extra fancy template')),
-	)
+    CMS_TEMPLATES = (
+        ('base.html', gettext('default')),
+        ('2col.html', gettext('2 Column')),
+        ('3col.html', gettext('3 Column')),
+        ('extra.html', gettext('Some extra fancy template')),
+    )
 
 
 *******************
@@ -54,27 +54,27 @@ placeholders.
 
 Example::
 
-	CMS_PLACEHOLDER_CONF = {
-		'content': {
-			'plugins': ('TextPlugin', 'PicturePlugin'),
-			'text_only_plugins': ('LinkPlugin',)
-			'extra_context': {"width":640},
-			'name':gettext("Content"),
-		},
-		'right-column': {
-			"plugins": ('TeaserPlugin', 'LinkPlugin'),
-			"extra_context": {"width":280},
-			'name':gettext("Right Column"),
-			'limits': {
-				'global': 2,
-				'TeaserPlugin': 1,
-				'LinkPlugin': 1,
-			},
-		},
-		'base.html content': {
-			"plugins": {'TextPlugin', 'PicturePlugin', 'TeaserPlugin'}
-		},
-	}
+    CMS_PLACEHOLDER_CONF = {
+        'content': {
+            'plugins': ('TextPlugin', 'PicturePlugin'),
+            'text_only_plugins': ('LinkPlugin',)
+            'extra_context': {"width":640},
+            'name':gettext("Content"),
+        },
+        'right-column': {
+            "plugins": ('TeaserPlugin', 'LinkPlugin'),
+            "extra_context": {"width":280},
+            'name':gettext("Right Column"),
+            'limits': {
+                'global': 2,
+                'TeaserPlugin': 1,
+                'LinkPlugin': 1,
+            },
+        },
+        'base.html content': {
+            "plugins": {'TextPlugin', 'PicturePlugin', 'TeaserPlugin'}
+        },
+    }
 
 You can combine template names and placeholder names to granually define
 plugins, as shown above with ''base.html content''.
@@ -112,8 +112,8 @@ CMS_PLUGIN_CONTEXT_PROCESSORS
 Default: ``[]``
 
 A list of plugin context processors. Plugin context processors are callables
-that modify all plugin's context before rendering. See :doc:`custom_plugins` for
-more information.
+that modify all plugin's context before rendering. See
+:doc:`../extending_cms/custom_plugins` for more information.
 
 
 CMS_PLUGIN_PROCESSORS
@@ -122,7 +122,8 @@ CMS_PLUGIN_PROCESSORS
 Default: ``[]``
 
 A list of plugin processors. Plugin processors are callables that modify all
-plugin's output after rendering. See :doc:`custom_plugins` for more information.
+plugin's output after rendering. See :doc:`../extending_cms/custom_plugins` for
+more information.
 
 
 CMS_APPHOOKS
@@ -139,11 +140,11 @@ If this setting is set, the auto-discovery is disabled.
 
 Example::
 
-	CMS_APPHOOKS = (
-    	'myapp.cms_app.MyApp',
-    	'otherapp.cms_app.MyFancyApp',
-    	'sampleapp.cms_app.SampleApp',
-	)
+    CMS_APPHOOKS = (
+        'myapp.cms_app.MyApp',
+        'otherapp.cms_app.MyFancyApp',
+        'sampleapp.cms_app.SampleApp',
+    )
 
 PLACEHOLDER_FRONTEND_EDITING
 ============================
@@ -175,11 +176,11 @@ Defines the languages available in the CMS.
 
 Example::
 
-	CMS_LANGUAGES = (
-	    ('fr', gettext('French')),
-	    ('de', gettext('German')),
-	    ('en', gettext('English')),
-	)
+    CMS_LANGUAGES = (
+        ('fr', gettext('French')),
+        ('de', gettext('German')),
+        ('en', gettext('English')),
+    )
 
 .. note:: Make sure you only define languages which are also in ``LANGUAGES``.
 
@@ -202,10 +203,10 @@ Language fallback ordering for each language.
 
 Example::
 
-	CMS_LANGUAGE_CONF = {
-		'de': ['en', 'fr'],
-		'en': ['de'],
-	}
+    CMS_LANGUAGE_CONF = {
+        'de': ['en', 'fr'],
+        'en': ['de'],
+    }
 
 CMS_SITE_LANGUAGES
 ==================
@@ -218,11 +219,11 @@ only get the languages available on this site.
 
 Example::
 
-	CMS_SITE_LANGUAGES = {
-		1:['en','de'],
-		2:['en','fr'],
-		3:['en'],
-	}
+    CMS_SITE_LANGUAGES = {
+        1:['en','de'],
+        2:['en','fr'],
+        3:['en'],
+    }
 
 
 CMS_FRONTEND_LANGUAGES
@@ -236,7 +237,7 @@ show it to the world yet.
 
 Example::
 
-	CMS_FRONTEND_LANGUAGES = ("de", "en", "pt-BR")
+    CMS_FRONTEND_LANGUAGES = ("de", "en", "pt-BR")
 
 
 CMS_DBGETTEXT
@@ -248,6 +249,8 @@ Enable gettext-based translation of CMS content rather than use the standard
 administration interface. Requires `django-dbgettext
 <http://http://bitbucket.org/drmeers/django-dbgettext>`_.
 
+.. warning:: This feature is deprecated and will be removed in 2.2.
+
 CMS_DBGETTEXT_SLUGS
 ===================
 
@@ -258,6 +261,8 @@ stage, as resulting translations cannot be guaranteed to be unique.
 
 For general dbgettext settings, see the `dbgettext documentation
 <http://bitbucket.org/drmeers/django-dbgettext/src/tip/docs>`_.
+
+.. warning:: This feature is deprecated and will be removed in 2.2.
 
 
 **************
@@ -321,7 +326,7 @@ With this field you can overwrite the title that is displayed in the menu.
 
 To access the menu title in the template, use::
 
-	{{ page.get_menu_title }}
+    {{ page.get_menu_title }}
 
 CMS_REDIRECTS
 =============
@@ -389,7 +394,7 @@ only a subset of the pages he's allowed access to, for example.
 
 CMS_MODERATOR
 =============
-	
+
 Default: ``False``
 
 If set to true, gives you a new "moderation" column in the tree view.
@@ -421,22 +426,28 @@ Page Title, Meta Keywords and Meta Description in there.
 
 To access these fields in the template use::
 
-	{% load cms_tags %}
-	<head>
-		<title>{% page_attribute page_title %}</title>
-		<meta name="description" content="{% page_attribute meta_description %}"/>
-		<meta name="keywords" content="{% page_attribute meta_keywords %}"/>
-		...
-		...
-	</head>
+    {% load cms_tags %}
+    <head>
+        <title>{% page_attribute page_title %}</title>
+        <meta name="description" content="{% page_attribute meta_description %}"/>
+        <meta name="keywords" content="{% page_attribute meta_keywords %}"/>
+        ...
+        ...
+    </head>
 
 CMS_CONTENT_CACHE_DURATION
 ==========================
 
 Default: ``60``
 
-Defines how long page content should be cached, in seconds, including navigation and admin
-menu.
+Cache expiration (in seconds) for ``show_placeholder`` and ``page_url`` template tags.
+
+MENU_CACHE_DURATION
+===================
+
+Default: ``3600``
+
+Cache expiration (in seconds) for the menu tree.
 
 CMS_CACHE_PREFIX
 ================
@@ -450,4 +461,4 @@ to share cache objects.
 
 Example::
 
-	CMS_CACHE_PREFIX = 'mysite-live'
+    CMS_CACHE_PREFIX = 'mysite-live'
