@@ -30,6 +30,7 @@ URL_CMS_PAGE_DELETE = URL_CMS_PAGE_CHANGE + "delete/"
 URL_CMS_PLUGIN_ADD = URL_CMS_PAGE + "add-plugin/"
 URL_CMS_PLUGIN_EDIT = URL_CMS_PAGE + "edit-plugin/"
 URL_CMS_PLUGIN_REMOVE = URL_CMS_PAGE + "remove-plugin/"
+URL_CMS_TRANSLATION_DELETE = URL_CMS_PAGE_CHANGE + "delete-translation/"
 
 class _Warning(object):
     def __init__(self, message, category, filename, lineno):
@@ -270,6 +271,7 @@ class CMSTestCase(TestCase):
             'wsgi.multiprocess': True,
             'wsgi.multithread':  False,
             'wsgi.run_once':     False,
+            'wsgi.input':        ''
         }
         request = WSGIRequest(environ)
         request.session = self.client.session
@@ -368,7 +370,7 @@ class CMSTestCase(TestCase):
             position=1, 
             language=language
         )
-        plugin_base.insert_at(None, position='last-child', commit=False)
+        plugin_base.insert_at(None, position='last-child', save=False)
                 
         plugin = Text(body=body)
         plugin_base.set_base_attr(plugin)

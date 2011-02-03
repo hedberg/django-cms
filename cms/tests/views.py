@@ -1,3 +1,4 @@
+from __future__ import with_statement
 from cms.apphook_pool import apphook_pool
 from cms.test.testcases import SettingsOverrideTestCase
 from cms.test.util.context_managers import SettingsOverride
@@ -9,11 +10,11 @@ import sys
 
 
 APP_NAME = 'SampleApp'
-APP_MODULE = "testapp.sampleapp.cms_app"
+APP_MODULE = "cms.test.apps.sampleapp.cms_app"
 
 
 class ViewTests(SettingsOverrideTestCase):
-    urls = 'testapp.urls_for_apphook_tests'
+    urls = 'cms.test.project.urls_for_apphook_tests'
     settings_overrides = {'CMS_MODERATOR': False}
     
     def setUp(self):

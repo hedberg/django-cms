@@ -22,11 +22,11 @@ from django.utils.translation import ugettext_lazy as _, get_language, ugettext
 from menus.menu_pool import menu_pool
 from os.path import join
 from publisher.errors import MpttPublisherCantPublish
-from publisher.mptt_support import Mptt
+from mptt.models import MPTTModel
 import copy
 
 
-class Page(Mptt):
+class Page(MPTTModel):
     """
     A simple hierarchical page model
     """
@@ -59,7 +59,8 @@ class Page(Mptt):
     created_by = models.CharField(_("created by"), max_length=70, editable=False)
     changed_by = models.CharField(_("changed by"), max_length=70, editable=False)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    creation_date = models.DateTimeField(editable=False, default=datetime.now)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    changed_date = models.DateTimeField(auto_now=True)
     publication_date = models.DateTimeField(_("publication date"), null=True, blank=True, help_text=_('When the page should go live. Status must be "Published" for page to go live.'), db_index=True)
     publication_end_date = models.DateTimeField(_("publication end date"), null=True, blank=True, help_text=_('When to expire the page. Leave empty to never expire.'), db_index=True)
     in_navigation = models.BooleanField(_("in navigation"), default=True, db_index=True)
@@ -1051,14 +1052,14 @@ class Page(Mptt):
         if not self.publisher_public_id:
             # is there anybody on left side?
             if prev_sibling:
-                obj.insert_at(prev_sibling.publisher_public, position='right', commit=False)
+                obj.insert_at(prev_sibling.publisher_public, position='right', save=False)
             else:
                 # it is a first time published object, perform insert_at:
                 parent, public_parent = self.parent, None
                 if parent:
                     public_parent = parent.publisher_public
                 if public_parent:
-                    obj.insert_at(public_parent, commit=False)
+                    obj.insert_at(public_parent, save=False)
         else:
             # check if object was moved / structural tree change
             prev_public_sibling = self.old_public.get_previous_fitlered_sibling()
