@@ -236,10 +236,7 @@ class PageAttribute(Tag):
     Synopsis
          {% page_attribute "field-name" %}
          {% page_attribute "field-name" page_lookup %}
-<<<<<<< HEAD
          {% page_attribute "field-name" as var_name %}
-=======
->>>>>>> develop
 
     Example
          {# Output current page's page_title attribute: #}
